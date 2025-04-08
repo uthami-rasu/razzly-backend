@@ -2,11 +2,11 @@
   "name": "razzly-backend",
   "version": "1.0.0",
   "description": "api for razzly",
-  "main": "index.js",
+  "main": "sever.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node --watch index.js"
+    "start": "node --watch --env-file=.env server.js"
   },
   "repository": {
     "type": "git",
