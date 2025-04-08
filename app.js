@@ -12,7 +12,6 @@ app.use(express.json())
 
 // for Testing 
 app.get("/", (req, res) => {
-
     return res.json({
         message: "Hello!, Server running."
     })
@@ -51,6 +50,11 @@ app.post('/api/v1/short_url', async (req, res) => {
 
     } catch (err) {
         console.error("Error Occured:", err)
+        return res.json({
+            statusCode: 500,
+            error: err.message
+        })
+
     }
 })
 

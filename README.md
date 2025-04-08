@@ -14,11 +14,19 @@
     - userId : uid
 
 - /api/get_url/<short_url>
-- short_url => look for long_url => increment Visits => find country => deviceType => browserType => referar 
+- short_url => look for long_url => increment Visits => find country => deviceType => browserType => referar
 - Table Fiedls (Visits)
+
   - total_visits
   - date
   - country
   - deviceType
   - browbserType
   - referar
+
+- /api/v1/bulk-analysis
+- overall clicks last 7 day
+- overall country
+- overall deviceType
+- overall browserType
+- overall referar
