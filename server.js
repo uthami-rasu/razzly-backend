@@ -3,13 +3,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import mongoConn from "./config/db.js";
+import { getHash } from "./utils/utils.js";
 // import TestModel from "./models/visitsModel.js";
 
 async function startServer() {
     try {
         await mongoConn(); // wait for db connection
         console.log("✅ MongoDB connected");
-
+        // console.log(getHash("https://localhost"))
         // await createTestDocument(); // then create test data
 
         app.listen(8000, () => {

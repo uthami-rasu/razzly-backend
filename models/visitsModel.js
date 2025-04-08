@@ -1,51 +1,30 @@
 import mongoose, { mongo } from "mongoose";
 
-const urlSchema = new mongoose.Schema({
-    originalUrl: {
-        type: String,
-        required: true
-    },
+const visitSchema = new mongoose.Schema({
     shortUrl: {
         type: String,
-        required: true
+        required: true,
     }
     ,
-    createdAt: {
+    date: {
         type: Date,
         default: Date.now
     }
-    , createdBy: {
-        type: Object,
-        default: {
-            name: "Razz",
-            email: "razz@hmail.com"
-        }
-    },
-    isActive: {
-        type: Boolean,
-        required: true
-
-    },
-    userId: {
+    , country: {
         type: String,
-        required: true
+    },
+    deviceType: {
+        type: String,
+    },
+    browserType: {
+        type: String,
+    },
+    referar: {
+        type: String,
     }
-}, { collection: "tests" });
+}, { collection: "visit_logs" });
 
 
-const TestModel = mongoose.models.Test || mongoose.model("Test", urlSchema)
+const VisitModel = mongoose.models.Visits || mongoose.model("Visits", visitSchema)
 
-export async function createTestDocument() {
-    const doc = new TestModel({
-        originalUrl: "https://example.com",
-        shortUrl: "exmpl",
-        isActive: true,
-        userId: "user123"
-    });
-
-    await doc.save();
-    console.log("Document saved!");
-}
-
- 
-export default TestModel;
+export default VisitModel; 

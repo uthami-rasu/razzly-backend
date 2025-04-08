@@ -20,8 +20,10 @@
   "homepage": "https://github.com/uthami-rasu/razzly-backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "express-useragent": "^1.0.15",
     "mongoose": "^8.13.2"
   }
 }
