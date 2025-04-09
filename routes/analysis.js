@@ -1,15 +1,15 @@
 import express from "express";
-import urlModel from "../models/url";
-import VisitModel from "../models/visitsModel";
+import urlModel from "../models/url.js";
+import VisitModel from "../models/visitsModel.js";
 
 
-const router = express.Router()
+export const router = express.Router()
 
 
-router.get("/api/v1/bulk-analysis", async (req, res) => {
+router.get("/bulk-analysis", async (req, res) => {
 
     try {
-        const userId = "someId";
+        const userId = "3";
 
         const shortUrlLists = await urlModel.find({ userId: userId }, 'shortUrl')
 
@@ -20,7 +20,7 @@ router.get("/api/v1/bulk-analysis", async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            fetchRecords,
+            data: fetchRecords,
         });
     }
     catch (err) {

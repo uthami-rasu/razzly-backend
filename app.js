@@ -1,14 +1,16 @@
 import express from "express";
 import VisitsModel from "./models/visitsModel.js";
-import { getHash } from "./utils/utils.js";
+import { getHash, isDocExists } from "./utils/utils.js";
 import urlModel from "./models/url.js";
 
 import useragent from "express-useragent";
-
+import { router } from "./routes/analysis.js";
 
 const app = express();
 
 app.use(express.json())
+
+app.use("/api/v1", router);
 
 // for Testing 
 app.get("/", (req, res) => {
@@ -23,9 +25,22 @@ app.get("/", (req, res) => {
 app.post('/api/v1/short_url', async (req, res) => {
 
     try {
-        const { longUrl } = req.body;
+        const { longUrl, userId } = req.body;
 
-        const shortUrl = getHash(longUrl || "someUrl");
+        // check if req sends longUrl
+
+        if (!longUrl) {
+            return res.status(404).json({
+                statusCode: 400,
+                message: "Short Url not found"
+            })
+        }
+
+        let shortUrl = getHash(longUrl);
+
+        if (!await isDocExists(shortUrl)) {
+            shortUrl = getHash(longUrl)
+        }
 
         const createdBy = {
             name: "Razz",
@@ -36,21 +51,21 @@ app.post('/api/v1/short_url', async (req, res) => {
             originalUrl: longUrl,
             createdBy: createdBy,
             isActive: true,
-            userId: "2"
+            userId: userId
 
         })
 
         await newDoc.save();
         console.log("Document Created!")
 
-        return res.json({
+        return res.status(201).json({
             statusCode: 201,
             message: "Document Created!"
         })
 
     } catch (err) {
         console.error("Error Occured:", err)
-        return res.json({
+        return res.status(500).json({
             statusCode: 500,
             error: err.message
         })
@@ -71,7 +86,9 @@ app.get("/api/v1/:short_url", async (req, res) => {
                 message: "Short URL not found"
             });
         }
-        const longUrl = record.originalUrl;
+
+        // increment clicks count 
+
 
         // 2. Get User Agent Info
         const agent = useragent.parse(req.headers['user-agent']);
