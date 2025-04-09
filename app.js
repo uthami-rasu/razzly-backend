@@ -115,13 +115,13 @@ app.get("/api/v1/:short_url", async (req, res) => {
         }
 
         // 5. Get Referer
-        const referer = req.headers['referer'] || 'Direct';
+        const referrer = req.headers['referer'] || 'Direct';
         console.log({
             deviceType,
             browser,
             os,
             country,
-            referer
+            referrer
         });
         // 6. Save visit info
         const newVisit = new VisitsModel({
@@ -129,7 +129,7 @@ app.get("/api/v1/:short_url", async (req, res) => {
             country: country,
             deviceType: deviceType,
             browserType: browser,
-            referer: referer
+            referrer: referrer
         });
 
         await newVisit.save();

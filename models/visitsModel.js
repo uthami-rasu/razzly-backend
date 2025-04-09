@@ -4,8 +4,7 @@ const visitSchema = new mongoose.Schema({
     shortUrl: {
         type: String,
         required: true,
-    }
-    ,
+    },
     date: {
         type: Date,
         default: Date.now
@@ -19,7 +18,7 @@ const visitSchema = new mongoose.Schema({
     browserType: {
         type: String,
     },
-    referar: {
+    referrer: {
         type: String,
     }
 }, { collection: "visit_logs" });
