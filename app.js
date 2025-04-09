@@ -5,9 +5,10 @@ import urlModel from "./models/url.js";
 
 import useragent from "express-useragent";
 import { router } from "./routes/analysis.js";
+import cors from "cors";
 
 const app = express();
-
+app.use(cors())
 app.use(express.json())
 
 app.use("/api/v1", router);

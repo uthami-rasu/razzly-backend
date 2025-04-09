@@ -6,7 +6,7 @@ import VisitModel from "../models/visitsModel.js";
 export const router = express.Router()
 
 
-router.get("/bulk-analysis", async (req, res) => {
+router.post("/bulk-analysis", async (req, res) => {
 
     try {
         const userId = "3";
@@ -29,6 +29,4 @@ router.get("/bulk-analysis", async (req, res) => {
             error: err.message
         })
     }
-
-
 })
