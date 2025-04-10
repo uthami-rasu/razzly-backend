@@ -154,6 +154,15 @@ router.post("/bulk-analysis", async (req, res) => {
             ]
         )
 
+        console.log({
+            countryData: countryData,
+            referrerData: referrerData,
+            lineChartData: LineChartData,
+            deviceTypeData: deviceTypeData,
+            browserTypeData: browserTypeData
+
+        })
+
         return res.status(200).json({
             success: true,
             data: {
@@ -167,6 +176,8 @@ router.post("/bulk-analysis", async (req, res) => {
 
 
         });
+
+
     }
     catch (err) {
         return res.status(500).json({
