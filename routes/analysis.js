@@ -17,9 +17,11 @@ router.post("/bulk-analysis", async (req, res) => {
 
         const userId = "3";
 
+        const { reqShortUrls = [] } = req.body;
+
         const shortUrlLists = await urlModel.find({ userId: userId }, 'shortUrl')
 
-        const shortUrls = shortUrlLists.map((url) => url.shortUrl)
+        const shortUrls = reqShortUrls?.length > 0 ? reqShortUrls : shortUrlLists.map((url) => url.shortUrl)
 
         const LineChartData = await VisitModel.aggregate([
             {
