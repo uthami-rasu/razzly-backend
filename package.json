@@ -1,12 +1,12 @@
 {
   "name": "razzly-backend",
   "version": "1.0.0",
-  "description": "api for razzly",
-  "main": "sever.js",
+  "description": "API for Razzly",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --watch --env-file=.env server.js"
+    "start": "node server.js",
+    "dev": "node --watch --env-file=.env server.js"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,8 @@
     "express": "^5.1.0",
     "express-useragent": "^1.0.15",
     "mongoose": "^8.13.2"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }
