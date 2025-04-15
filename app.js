@@ -8,6 +8,7 @@ import { router } from "./routes/analysis.js";
 import cors from "cors";
 import admin from "firebase-admin";
 
+console.log(process.env)
 const fbconfig = JSON.parse(process.env.FIREBASE_CONFIG)
 admin.initializeApp({
     credential: admin.credential.cert(fbconfig)
