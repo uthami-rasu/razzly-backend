@@ -7,9 +7,8 @@ import useragent from "express-useragent";
 import { router } from "./routes/analysis.js";
 import cors from "cors";
 import admin from "firebase-admin";
-import fbConfig from "./etc/secrets/fbconfig.json";
 
-const fbconfig = JSON.parse(fbConfig)
+const fbconfig = JSON.parse(process.env.FIREBASE_CONFIG)
 admin.initializeApp({
     credential: admin.credential.cert(fbconfig)
 });
