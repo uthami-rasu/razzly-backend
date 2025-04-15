@@ -1,6 +1,10 @@
 import mongoose, { mongo } from "mongoose";
 
 const urlSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: false
+    },
     originalUrl: {
         type: String,
         required: true

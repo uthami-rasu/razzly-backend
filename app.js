@@ -6,6 +6,14 @@ import urlModel from "./models/url.js";
 import useragent from "express-useragent";
 import { router } from "./routes/analysis.js";
 import cors from "cors";
+import admin from "firebase-admin";
+import fbConfig from "./etc/secrets/fbconfig.json";
+
+const fbconfig = JSON.parse(fbConfig)
+admin.initializeApp({
+    credential: admin.credential.cert(fbconfig)
+});
+
 
 const app = express();
 app.use(cors())
@@ -26,7 +34,14 @@ app.get("/", (req, res) => {
 app.post('/api/v1/short_url', async (req, res) => {
 
     try {
-        const { longUrl, userId } = req.body;
+        const { longUrl, title } = req.body;
+
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ message: 'No token provided' });
+
+        }
 
         // check if req sends longUrl
 
@@ -37,25 +52,41 @@ app.post('/api/v1/short_url', async (req, res) => {
             })
         }
 
+        const idToken = authHeader.split("Bearer ")[1]
+
+        // verify the ID Token 
+
+        const decodedToken = await admin.auth().verifyIdToken(idToken)
+
+        console.log('Decoded Token:', decodedToken);
+
+        const userId = decodedToken.uid; // 
+        const userEmail = decodedToken.email; //
+        const displayName = decodedToken.name
+
         let shortUrl = getHash(longUrl);
+
 
         if (!await isDocExists(shortUrl)) {
             shortUrl = getHash(longUrl)
         }
 
         const createdBy = {
-            name: "Razz",
-            email: "razz@gmail.com"
+            name: (displayName || null),
+            email: userEmail
         }
         const newDoc = new urlModel({
             shortUrl: shortUrl,
             originalUrl: longUrl,
             createdBy: createdBy,
             isActive: true,
-            userId: userId
+            userId: userId,
+            name: title ? title : `No Title(${shortUrl})`
+
 
         })
 
+        console.log(newDoc)
         await newDoc.save();
         console.log("Document Created!")
 

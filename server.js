@@ -6,6 +6,8 @@ import mongoConn from "./config/db.js";
 import { getHash } from "./utils/utils.js";
 // import TestModel from "./models/visitsModel.js";
 
+
+
 async function startServer() {
     try {
         await mongoConn(); // wait for db connection
