@@ -189,21 +189,18 @@ app.get("/api/v1/redirect/:short_url", async (req, res) => {
 
     try {
         if (!short_url) {
-            return res.status(400).json({ message: "Short URL is missing" });
+            return res.redirect(process.env.FRONTEND_ENDPOINT + "/error");
         }
 
         const doc = await urlModel.findOne({ shortUrl: short_url });
 
         if (!doc) {
-            return res.status(404).json({ message: "Short URL not found" });
+            return res.redirect(process.env.FRONTEND_ENDPOINT + "/error");
         }
 
         return res.redirect(doc.originalUrl); // 🚀 Fast redirect
     } catch (err) {
-        return res.status(500).json({
-            message: "Server Error",
-            error: err.message,
-        });
+        return res.redirect(process.env.FRONTEND_ENDPOINT + "/error");
     }
 });
 
