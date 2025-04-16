@@ -184,27 +184,21 @@ app.get("/api/v1/:short_url", async (req, res) => {
 
 // 3 
 
-app.post("/api/v1/redirect/:short_url", async (req, res) => {
+app.get("/api/v1/redirect/:short_url", async (req, res) => {
     const { short_url } = req.params;
 
     try {
         if (!short_url) {
-            return res.status(404).json({
-                message: "Short URL is missing",
-            });
+            return res.status(400).json({ message: "Short URL is missing" });
         }
 
         const doc = await urlModel.findOne({ shortUrl: short_url });
 
         if (!doc) {
-            return res.status(404).json({
-                message: "Short URL not found",
-            });
+            return res.status(404).json({ message: "Short URL not found" });
         }
 
-        return res.status(200).json({
-            originalurl: doc.originalUrl,
-        });
+        return res.redirect(doc.originalUrl); // 🚀 Fast redirect
     } catch (err) {
         return res.status(500).json({
             message: "Server Error",
