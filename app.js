@@ -2,7 +2,7 @@ import express from "express";
 import VisitsModel from "./models/visitsModel.js";
 import { getHash, isDocExists } from "./utils/utils.js";
 import urlModel from "./models/url.js";
-
+import geoip from "geoip-lite"
 import useragent from "express-useragent";
 import { router } from "./routes/analysis.js";
 import cors from "cors";
@@ -22,6 +22,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use("/api/v1", router);
+app.set('trust proxy', true);
+
 
 // for Testing 
 app.get("/", (req, res) => {
@@ -229,20 +231,26 @@ app.get("/api/redirect/:short_url", async (req, res) => {
         const os = agent.os;
 
         // 3. Get IP Address
-        const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress;
+        //  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress;
+
+
 
         // 4. Get Country from IP
         let country = 'Unknown';
         try {
+            const ip = req.ip;
+
             if (ip === '::1' || ip === '127.0.0.1') {
                 country = 'Localhost';
             } else {
-                const response = await fetch(`https://ipapi.co/${ip}/country_name/`);
-                country = await response.text();
+                const geo = geoip.lookup(ip);
+                country = geo?.country || 'Unknown';
             }
         } catch (error) {
             console.error('Error getting country', error);
+            country = 'Unknown';
         }
+
 
         // 5. Get Referer
         const referrer = req.headers['referer'] || 'Direct';
