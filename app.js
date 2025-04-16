@@ -9,6 +9,9 @@ import cors from "cors";
 import admin from "firebase-admin";
 
 const fbconfig = JSON.parse(process.env.FIREBASE_CONFIG)
+
+
+
 admin.initializeApp({
     credential: admin.credential.cert(fbconfig)
 });
@@ -198,10 +201,78 @@ app.get("/api/v1/redirect/:short_url", async (req, res) => {
             return res.redirect(process.env.FRONTEND_ENDPOINT + "/error");
         }
 
-        return res.redirect(doc.originalUrl); // 🚀 Fast redirect
+
+
+        return res.redirect(doc.originalUrl);
+
+
     } catch (err) {
         return res.redirect(process.env.FRONTEND_ENDPOINT + "/error");
     }
 });
+
+// 4
+app.get("/api/redirect/:short_url", async (req, res) => {
+    try {
+        const { short_url } = req.params;
+
+        // 1. Get long URL from your database
+        const record = await urlModel.findOne({ shortUrl: short_url });
+        if (!record) {
+            return res.redirect(process.env.FRONTEND_ENDPOINT + "/error");
+        }
+
+        // 2. Get User Agent Info
+        const agent = useragent.parse(req.headers['user-agent']);
+        const deviceType = agent.isMobile ? 'Mobile' : (agent?.isTablet ? 'Tablet' : 'Desktop');
+        const browser = agent.browser;
+        const os = agent.os;
+
+        // 3. Get IP Address
+        const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress;
+
+        // 4. Get Country from IP
+        let country = 'Unknown';
+        try {
+            if (ip === '::1' || ip === '127.0.0.1') {
+                country = 'Localhost';
+            } else {
+                const response = await fetch(`https://ipapi.co/${ip}/country_name/`);
+                country = await response.text();
+            }
+        } catch (error) {
+            console.error('Error getting country', error);
+        }
+
+        // 5. Get Referer
+        const referrer = req.headers['referer'] || 'Direct';
+
+        // 6. Save visit info
+        const newVisit = new VisitsModel({
+            shortUrl: short_url,
+            country: country,
+            deviceType: deviceType,
+            browserType: browser,
+            referrer: referrer
+        });
+
+        await newVisit.save();
+        console.log("New visit log created:", {
+            deviceType,
+            browser,
+            os,
+            country,
+            referrer
+        });
+
+        // 7. Redirect to actual long URL
+        return res.redirect(record.originalUrl);
+
+    } catch (err) {
+        console.error(err);
+        return res.redirect(process.env.FRONTEND_ENDPOINT + "/error");
+    }
+});
+
 
 export default app 

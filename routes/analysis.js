@@ -45,7 +45,7 @@ router.post("/bulk-analysis", async (req, res) => {
             {
                 $match: {
                     shortUrl: { $in: shortUrls },
-                    date: { $lte: sevenDaysAgo }
+                    date: { $gte: sevenDaysAgo }
                 }
             },
             {
