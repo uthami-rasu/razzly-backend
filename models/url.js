@@ -5,6 +5,10 @@ const urlSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    urlType: {
+        type: String,
+        default: "link"
+    },
     originalUrl: {
         type: String,
         required: true
@@ -20,10 +24,7 @@ const urlSchema = new mongoose.Schema({
     }
     , createdBy: {
         type: Object,
-        default: {
-            name: "Razz",
-            email: "razz@hmail.com"
-        }
+
     },
     isActive: {
         type: Boolean,

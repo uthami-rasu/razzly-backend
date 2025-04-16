@@ -8,7 +8,6 @@ import { router } from "./routes/analysis.js";
 import cors from "cors";
 import admin from "firebase-admin";
 
-
 const fbconfig = JSON.parse(process.env.FIREBASE_CONFIG)
 admin.initializeApp({
     credential: admin.credential.cert(fbconfig)
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
 app.post('/api/v1/short_url', async (req, res) => {
 
     try {
-        const { longUrl, title } = req.body;
+        const { longUrl, title, urlType } = req.body;
 
         const authHeader = req.headers.authorization;
 
@@ -76,6 +75,7 @@ app.post('/api/v1/short_url', async (req, res) => {
             email: userEmail
         }
         const newDoc = new urlModel({
+            urlType: urlType,
             shortUrl: shortUrl,
             originalUrl: longUrl,
             createdBy: createdBy,
