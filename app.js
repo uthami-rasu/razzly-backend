@@ -97,7 +97,8 @@ app.post('/api/v1/short_url', async (req, res) => {
 
         return res.status(201).json({
             statusCode: 201,
-            message: "Document Created!"
+            message: "Document Created!",
+            shortUrl: shortUrl
         })
 
     } catch (err) {
